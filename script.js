@@ -63,8 +63,44 @@ const quizData = [
 
 const qns = document.getElementById("qns");
 const options = document.getElementById("options");
+const qnsNumber = document.getElementById("qnsNumber");
+const nextQnsBtn = document.getElementById("next-btn");
 
 var currentIndex = 0;
 
-qns.innerText = quizData[currentIndex].qns;
+function loadQns() {
+  let currentQns = quizData[currentIndex];
 
+  qnsNumber.innerText = `Qns ${currentIndex + 1}/${quizData.length}`;
+
+  qns.innerText = quizData[currentIndex].qns;
+
+  qns.innerText = currentQns.qns;
+
+  options.innerHTML = "";
+
+  currentQns.options.forEach((option, index) => {
+    const col = document.createElement("div");
+
+    col.classList.add("col-md-6");
+
+    const button = document.createElement("button");
+
+    button.innerText = option;
+
+    button.classList.add("btn", "btn-outline-primary", "option-btn");
+
+    options.appendChild(col);
+
+    col.appendChild(button);
+  });
+}
+
+loadQns();
+
+function nextQns() {
+  if (currentIndex < quizData.length - 1) {
+    currentIndex++;
+  }
+  loadQns();
+}

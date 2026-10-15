@@ -45,11 +45,12 @@ body {
 .quiz-card {
   height: 600px !important;
   /* border: 2px solid black; */
-  width: 500px !important;
+  width: 550px !important;
   
 }
 
 .option-btn {
   height: 70px;
   width: 220px;
+  margin-top: 20px;
 }
