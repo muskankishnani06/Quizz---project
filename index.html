@@ -16,13 +16,13 @@
     <div
       class="container d-flex justify-content-center align-items-center min-vh-100"
     >
-      <div class="row">
-        <div class="card quiz-card">
+      <div class="row quiz-card rounded-5 shadow-lg">
+        <div class="card d-flex flex-column gap-4">
           <div class="card-body">
             <h1 class="card-title text-center text-success">Quiz</h1>
             <div class="d-flex justify-content-between mt-5">
               <h4 class="text-primary" id="qnsNumber">Qns 1/3</h4>
-              <h4 class="text-danger" id="timer">Time Left 24</h4>
+              <h4 class="text-danger" id="timer">Time Left 30</h4>
             </div>
 
             <h2 class="text-center m-4" id="qns">Question will appear here</h2>
@@ -35,6 +35,8 @@
             >
               Next Question
             </button>
+
+            <h3 id="result"></h3>
           </div>
         </div>
       </div>

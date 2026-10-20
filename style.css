@@ -1,11 +1,23 @@
-* {
-  margin: 0;
-  padding: 0;
+/* =========================================================
+   1. BASE / PAGE
+   ========================================================= */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html,
 body {
-  background: conic-gradient(
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  color: #1e1b4b;
+   background: conic-gradient(
     from 210deg,
     #c5bbb8 0deg,
     #c5bbb8 24deg,
@@ -38,19 +50,531 @@ body {
     #5b4b74 calc(336deg + 0.1deg) 360deg
   );
   background-repeat: no-repeat;
-  height: 100vh;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
 }
 
-
-.quiz-card {
-  height: 600px !important;
-  /* border: 2px solid black; */
-  width: 550px !important;
-  
+body > .container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
-.option-btn {
-  height: 70px;
-  width: 220px;
-  margin-top: 20px;
+/* =========================================================
+   2. QUIZ CARD
+   ========================================================= */
+body .quiz-card {
+  --bs-gutter-x: 0;
+  --bs-gutter-y: 0;
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: 0;
+  padding: 2.5rem 2.25rem 2.25rem;
+  overflow: hidden;
+  color: #1e1b4b;
+  background-color: #ffffff;
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  border-radius: 24px !important;
+  box-shadow: 0 24px 50px -16px rgba(76, 29, 149, 0.28),
+    0 10px 20px -10px rgba(37, 99, 235, 0.18) !important;
+  animation: cardEnter 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* thin gradient accent along the top edge */
+body .quiz-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #7c3aed, #2563eb);
+}
+
+/* Bootstrap's inner card becomes a transparent wrapper */
+body .quiz-card .card {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+body .quiz-card .card-body {
+  padding: 0;
+}
+
+/* Titles ("Quiz" and "Quiz result") */
+body .quiz-card .card-title,
+body .quiz-card > h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  background: linear-gradient(90deg, #6d28d9, #2563eb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#result:empty {
+  display: none;
+}
+
+/* =========================================================
+   3. QUIZ HEADER (question number + timer row)
+   ========================================================= */
+body .quiz-card .card-body > .d-flex {
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem !important;
+}
+
+body .quiz-card #qnsNumber {
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #5b21b6 !important;
+  background-color: #ede9fe;
+  border: 1px solid #ddd6fe;
+  border-radius: 999px;
+  letter-spacing: 0.01em;
+}
+
+/* =========================================================
+   4. TIMER
+   ========================================================= */
+body .quiz-card #timer {
+  min-width: 9rem;
+  margin: 0;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: #1e40af !important;
+  background-color: #dbeafe;
+  border: 1px solid #93c5fd;
+  border-radius: 999px;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Low-time warning (add class "timer-warning" to #timer) */
+body .quiz-card #timer.timer-warning {
+  color: #b91c1c !important;
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+  animation: timerPulse 1s ease-in-out infinite;
+}
+
+/* =========================================================
+   5. QUESTION
+   ========================================================= */
+body .quiz-card #qns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.5rem;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #1e1b4b;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   6. ANSWER OPTIONS
+   ========================================================= */
+body .quiz-card #options {
+  --bs-gutter-x: 0.75rem;
+  --bs-gutter-y: 0.75rem;
+}
+
+body .quiz-card .option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  min-height: 64px;
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: #312e81;
+  background-color: #ffffff;
+  border: 2px solid #a78bfa;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(49, 46, 129, 0.06);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  animation: optionEnter 0.35s ease-out backwards;
+}
+
+@media (hover: hover) {
+  body .quiz-card .option-btn:hover {
+    color: #4c1d95;
+    background-color: #f5f3ff;
+    border-color: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -8px rgba(124, 58, 237, 0.4);
+  }
+}
+
+body .quiz-card .option-btn:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  border-color: #7c3aed;
+  box-shadow: none;
+}
+
+body .quiz-card .option-btn:active {
+  color: #4c1d95;
+  background-color: #ede9fe;
+  border-color: #6d28d9;
+  transform: translateY(0) scale(0.99);
+  box-shadow: none;
+}
+
+/* Selected / correct / incorrect states (add these classes when needed) */
+body .quiz-card .option-btn.selected,
+body .quiz-card .option-btn.active {
+  color: #4c1d95;
+  background-color: #ede9fe;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+}
+
+body .quiz-card .option-btn.correct {
+  color: #14532d;
+  background-color: #ecfdf5;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+}
+
+body .quiz-card .option-btn.incorrect {
+  color: #7f1d1d;
+  background-color: #fef2f2;
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+body .quiz-card .option-btn:disabled:not(.correct):not(.incorrect) {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================================
+   7. NEXT BUTTON
+   ========================================================= */
+body .quiz-card #next-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1.75rem !important;
+  padding: 0.9rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 12px 22px -10px rgba(79, 70, 229, 0.6);
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+@media (hover: hover) {
+  body .quiz-card #next-btn:hover {
+    color: #ffffff;
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+    box-shadow: 0 16px 26px -10px rgba(79, 70, 229, 0.65);
+  }
+}
+
+body .quiz-card #next-btn:focus-visible {
+  color: #ffffff;
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  box-shadow: 0 12px 22px -10px rgba(79, 70, 229, 0.6);
+}
+
+body .quiz-card #next-btn:active {
+  color: #ffffff;
+  filter: brightness(0.95);
+  transform: translateY(0);
+  box-shadow: 0 6px 12px -6px rgba(79, 70, 229, 0.6);
+}
+
+body .quiz-card #next-btn:disabled,
+body .quiz-card #next-btn.disabled {
+  color: #475569;
+  background: #cbd5e1;
+  box-shadow: none;
+  filter: none;
+  transform: none;
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   8. RESULT SCREEN
+   ========================================================= */
+/* Final score banner */
+body .quiz-card > h4 {
+  margin: 0.25rem 0 1.5rem;
+  padding: 1.1rem 1rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+  border-radius: 18px;
+  box-shadow: 0 14px 26px -14px rgba(79, 70, 229, 0.7);
+}
+
+/* "Review summary" heading */
+body .quiz-card > div > h3 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #312e81;
+}
+
+/* List wrapper: block layout + hide stray commas from Array.map() output */
+body .quiz-card .list-group {
+  display: block;
+  font-size: 0;
+  border-radius: 0;
+}
+
+/* Review cards */
+body .quiz-card .list-group .list-group-item {
+  margin-bottom: 0.9rem;
+  padding: 1rem 1.1rem;
+  font-size: 1rem;
+  text-align: left;
+  color: #1e1b4b;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 5px solid #a78bfa;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px -2px rgba(30, 27, 75, 0.1);
+  overflow-wrap: anywhere;
+}
+
+body .quiz-card .list-group .list-group-item:last-child {
+  margin-bottom: 0;
+}
+
+body .quiz-card .list-group-item br {
+  display: none;
+}
+
+body .quiz-card .list-group-item h5 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left !important;
+}
+
+/* Question line */
+body .quiz-card .list-group-item h5:nth-of-type(1) {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e1b4b;
+}
+
+/* "Your answer" line */
+body .quiz-card .list-group-item h5:nth-of-type(2) {
+  margin-bottom: 0.5rem;
+  padding: 0.55rem 0.8rem;
+  color: #334155;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+/* "Correct answer" line is always green */
+body .quiz-card .list-group-item h5:nth-of-type(3) {
+  padding: 0.55rem 0.8rem;
+  color: #166534;
+  background-color: #ecfdf5;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+}
+
+/* Optional per-result states (add class to each <li>) */
+body .quiz-card .list-group .list-group-item.correct {
+  border-left-color: #16a34a;
+}
+body .quiz-card .list-group .list-group-item.incorrect {
+  border-left-color: #dc2626;
+}
+body .quiz-card .list-group .list-group-item.unanswered {
+  border-left-color: #d97706;
+}
+
+body .quiz-card .list-group-item.correct h5:nth-of-type(2) {
+  color: #166534;
+  background-color: #ecfdf5;
+  border-color: #bbf7d0;
+}
+body .quiz-card .list-group-item.incorrect h5:nth-of-type(2) {
+  color: #991b1b;
+  background-color: #fef2f2;
+  border-color: #fecaca;
+}
+body .quiz-card .list-group-item.unanswered h5:nth-of-type(2) {
+  font-style: italic;
+  color: #92400e;
+  background-color: #fffbeb;
+  border-color: #fde68a;
+}
+
+/* =========================================================
+   9. ANIMATIONS
+   ========================================================= */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes optionEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes timerPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+  }
+}
+
+/* =========================================================
+   10. RESPONSIVE
+   ========================================================= */
+/* Tablets and below: options stack (Bootstrap col-md-6 breakpoint) */
+@media (max-width: 767.98px) {
+  body .quiz-card {
+    padding: 2rem 1.5rem 1.75rem;
+    border-radius: 20px !important;
+  }
+
+  body .quiz-card #qns {
+    font-size: 1.3rem;
+  }
+}
+
+/* Large phones */
+@media (max-width: 575.98px) {
+  body > .container {
+    padding: 1rem 0.75rem;
+  }
+
+  body .quiz-card {
+    padding: 1.75rem 1.15rem 1.5rem;
+  }
+
+  body .quiz-card .card-title,
+  body .quiz-card > h3 {
+    font-size: 1.4rem;
+  }
+
+  body .quiz-card .card-body > .d-flex {
+    margin-top: 1.25rem !important;
+  }
+
+  body .quiz-card #qns {
+    min-height: 3.5rem;
+    margin: 1.25rem 0 !important;
+    font-size: 1.2rem;
+  }
+
+  body .quiz-card .option-btn {
+    min-height: 56px;
+    padding: 0.75rem 0.9rem;
+    font-size: 0.975rem;
+  }
+
+  body .quiz-card #next-btn {
+    margin-top: 1.5rem !important;
+    padding: 0.85rem 1rem;
+  }
+
+  body .quiz-card > h4 {
+    font-size: 1.35rem;
+  }
+
+  body .quiz-card .list-group .list-group-item {
+    padding: 0.9rem;
+  }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  body .quiz-card {
+    padding: 1.5rem 1rem 1.25rem;
+  }
+
+  body .quiz-card #qnsNumber,
+  body .quiz-card #timer {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  body .quiz-card #timer {
+    min-width: 8rem;
+  }
+
+  body .quiz-card #qns {
+    font-size: 1.1rem;
+  }
+}
+
+/* =========================================================
+   11. ACCESSIBILITY: REDUCED MOTION
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  body .quiz-card,
+  body .quiz-card .option-btn,
+  body .quiz-card #timer.timer-warning {
+    animation: none !important;
+  }
+
+  body .quiz-card *,
+  body .quiz-card *::before {
+    transition-duration: 0.01ms !important;
+  }
 }
